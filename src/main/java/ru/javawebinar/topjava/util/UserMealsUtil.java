@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.model.UserMealWithExceed;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,5 +32,20 @@ public class UserMealsUtil {
                 .filter(element -> TimeUtil.isBetween(element.getDateTime().toLocalTime(), startTime, endTime))
                 .map(element -> new UserMealWithExceed(element, totalCalories.get() > caloriesPerDay))
                 .collect(Collectors.toList());
+    }
+
+    public static List<UserMealWithExceed> getFilteredWithExceeded2(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        int calories = 0;
+        for (UserMeal userMeal : mealList) {
+            calories += userMeal.getCalories();
+        }
+        boolean exceed = calories > caloriesPerDay ? true : false;
+        List<UserMealWithExceed> result = new ArrayList<>();
+        for (UserMeal userMeal : mealList) {
+            if (TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime)) {
+                result.add(new UserMealWithExceed(userMeal, exceed));
+            }
+        }
+        return result;
     }
 }
