@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
-    public static List<MealTo> getFilteredWithExcess(List<Meal> meals, int caloriesPerDay) {
-        return getFilteredWithExcess(meals, LocalTime.of(0, 0), LocalTime.of(23, 59), caloriesPerDay);
+    public static List<MealTo> getWithExcess(List<Meal> meals, int caloriesPerDay) {
+        return getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
 
     public static List<MealTo> getFilteredWithExcess(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {

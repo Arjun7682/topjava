@@ -1,5 +1,4 @@
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.time.format.FormatStyle" %>
+<%@ page import="ru.javawebinar.topjava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -21,7 +20,7 @@
         <c:forEach items="${meals}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
             <tr bgcolor=<%=meal.isExcess() ? "red" : "green"%>>
-                <td>${meal.dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))}</td>
+                <td>${DateUtil.format(meal.dateTime)}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
             </tr>
