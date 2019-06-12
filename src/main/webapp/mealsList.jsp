@@ -16,6 +16,8 @@
             <th>Дата</th>
             <th>Описание</th>
             <th>Калории</th>
+            <th></th>
+            <th></th>
         </tr>
         <c:forEach items="${meals}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
@@ -23,9 +25,12 @@
                 <td>${DateUtil.format(meal.dateTime)}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
+                <td><a href="meals?id=${meal.id}&action=delete">delete</a></td>
+                <td><a href="meals?id=${meal.id}&action=edit">edit</a></td>
             </tr>
         </c:forEach>
     </table>
+    <h2><a href="meals?action=add">Add new meal</a></h2>
 </section>
 </body>
 </html>
