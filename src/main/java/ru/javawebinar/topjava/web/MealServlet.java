@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.storage.MealMapStorage;
 import ru.javawebinar.topjava.storage.Storage;
-import ru.javawebinar.topjava.util.Counter;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -23,31 +22,31 @@ public class MealServlet extends HttpServlet {
     private Storage storage = new MealMapStorage();
 
     {
-        storage.save(new Meal(Counter.getId(), LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
-        storage.save(new Meal(Counter.getId(), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000));
-        storage.save(new Meal(Counter.getId(), LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500));
-        storage.save(new Meal(Counter.getId(), LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000));
-        storage.save(new Meal(Counter.getId(), LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500));
-        storage.save(new Meal(Counter.getId(), LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));
+        storage.save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500));
+        storage.save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000));
+        storage.save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500));
+        storage.save(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000));
+        storage.save(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500));
+        storage.save(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510));
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
+
         int id = Integer.parseInt(req.getParameter("id"));
         LocalDateTime localDateTime = LocalDateTime.parse(req.getParameter("date"));
         String description = req.getParameter("description");
         int calories = Integer.parseInt(req.getParameter("calories"));
 
-        Meal meal;
-        if ((meal = storage.get(id)) != null) {
-            meal.setDateTime(localDateTime);
-            meal.setDescription(description);
-            meal.setCalories(calories);
-        } else {
-            meal = new Meal(id, localDateTime, description, calories);
+        Meal meal = new Meal(localDateTime, description, calories);
+        if (id == -1) {
             storage.save(meal);
+        } else {
+            meal.setId(id);
+            storage.update(meal);
         }
+
         req.setAttribute("meals", MealsUtil.getWithExcess(storage.getAll(), 2000));
         req.getRequestDispatcher("/mealsList.jsp").forward(req, resp);
     }
@@ -57,13 +56,9 @@ public class MealServlet extends HttpServlet {
         log.debug("redirect to meals");
 
         String action = req.getParameter("action");
-        if (action == null) {
-            req.setAttribute("meals", MealsUtil.getWithExcess(storage.getAll(), 2000));
-            req.getRequestDispatcher("/mealsList.jsp").forward(req, resp);
-            return;
-        }
+        action = action == null ? "" : action;
 
-        Meal meal = null;
+        Meal meal;
         String id = req.getParameter("id");
         switch (action) {
             case "delete":
@@ -74,8 +69,13 @@ public class MealServlet extends HttpServlet {
                 meal = storage.get(Integer.parseInt(id));
                 break;
             case "add":
-                meal = new Meal(Counter.getId(), null, "", 0);
+                meal = new Meal(null, "", 0);
+                meal.setId(-1);
                 break;
+            default:
+                req.setAttribute("meals", MealsUtil.getWithExcess(storage.getAll(), 2000));
+                req.getRequestDispatcher("/mealsList.jsp").forward(req, resp);
+                return;
         }
         req.setAttribute("meal", meal);
         req.getRequestDispatcher("/editMeal.jsp").forward(req, resp);
