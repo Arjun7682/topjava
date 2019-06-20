@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
@@ -40,6 +41,11 @@ public class MealServiceImpl implements MealService {
     @Override
     public void update(Meal meal, int userId) {
         checkNotFoundWithId(repository.save(meal, userId), meal.getId());
+    }
+
+    @Override
+    public Map<LocalDate, Integer> getCaloriesPerDay(int userId) {
+        return repository.getCaloriesPerDay(userId);
     }
 
     @Override

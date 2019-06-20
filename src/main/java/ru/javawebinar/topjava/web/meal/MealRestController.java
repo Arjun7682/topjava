@@ -40,7 +40,7 @@ public class MealRestController {
         endTime = endTime == null ? LocalTime.MAX : endTime;
 
         return MealsUtil.getWithExcess(service.getAll(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime),
-                MealsUtil.DEFAULT_CALORIES_PER_DAY);
+                MealsUtil.DEFAULT_CALORIES_PER_DAY, service.getCaloriesPerDay(SecurityUtil.authUserId()));
     }
 
     public Meal get(int id) {

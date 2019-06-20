@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 public interface MealService {
     Meal create(Meal meal, int userId);
@@ -15,6 +16,8 @@ public interface MealService {
     Meal get(int id, int userId) throws NotFoundException;
 
     void update(Meal meal, int userId);
+
+    Map<LocalDate, Integer> getCaloriesPerDay(int userId);
 
     List<Meal> getAll(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
 }
