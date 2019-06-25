@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
@@ -14,10 +15,11 @@ import static ru.javawebinar.topjava.UserTestData.USER;
 
 
 @Repository
+@Qualifier("inmemory")
 public class InMemoryUserRepository extends InMemoryBaseRepository<User> implements UserRepository {
 
-    static final int USER_ID = 1;
-    static final int ADMIN_ID = 2;
+    static final int USER_ID = 100000;
+    static final int ADMIN_ID = 100001;
 
     public void init() {
         entryMap.clear();
