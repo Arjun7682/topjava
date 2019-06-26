@@ -5,6 +5,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,11 +27,12 @@ public class MealService {
     }
 
     public Meal get(int id, int userId) {
-        return checkNotFoundWithId(repository.get(id, userId), id);
+        return checkNotFoundWithId(userId == SecurityUtil.authUserId() ? repository.get(id, userId) : null, id);
     }
 
     public void delete(int id, int userId) {
-        checkNotFoundWithId(repository.delete(id, userId), id);
+        boolean userValid = userId == SecurityUtil.authUserId();
+        checkNotFoundWithId(userId == SecurityUtil.authUserId() ? repository.delete(id, userId) : null, id);
     }
 
     public List<Meal> getBetweenDates(@Nullable LocalDate startDate, @Nullable LocalDate endDate, int userId) {
@@ -46,7 +48,7 @@ public class MealService {
     }
 
     public void update(Meal meal, int userId) {
-        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
+        checkNotFoundWithId(userId == SecurityUtil.authUserId() ? repository.save(meal, userId) : null, meal.getId());
     }
 
     public Meal create(Meal meal, int userId) {
