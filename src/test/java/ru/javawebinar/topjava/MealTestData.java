@@ -27,6 +27,14 @@ public class MealTestData {
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).usingDefaultElementComparator().isEqualTo(expected);
+        assertThat(actual).usingElementComparator((o1, o2) -> {
+            int result;
+            result = o1.getDateTime().compareTo(o2.getDateTime());
+            if (result != 0) return result;
+            result = o1.getDescription().compareTo(o2.getDescription());
+            if (result != 0) return result;
+            result = Integer.compare(o1.getCalories(), o2.getCalories());
+            return result;
+        }).isEqualTo(expected);
     }
 }
