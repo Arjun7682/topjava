@@ -1,9 +1,8 @@
 package ru.javawebinar.topjava.service;
 
 import org.springframework.test.context.ActiveProfiles;
+import ru.javawebinar.topjava.Profiles;
 
-@ActiveProfiles({
-        "datajpa",
-        "datajpa,jpa"})
+@ActiveProfiles(Profiles.DATAJPA)
 public class DataJpaMealServiceTest extends MealServiceTest {
 }
